@@ -5,14 +5,13 @@ pub struct Move {
     to: (usize, usize),
     piece_moved: Piece,
     piece_captured: Option<Piece>,
-    // Fields for special moves
     is_castling_move: bool,
     is_en_passant_move: bool,
     promoted_to: Option<PieceType>, // None if not a promotion
 }
 
 impl Move {
-    // Constructor for a regular move
+    // Constructor for a regular move or to handle special moves
     pub fn new(from: (usize, usize), to: (usize, usize), piece_moved: Piece, piece_captured: Option<Piece>) -> Self {
         Move {
             from,
@@ -25,5 +24,4 @@ impl Move {
         }
     }
 
-    // Additional constructors or methods for special moves can be added here
 }

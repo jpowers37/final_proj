@@ -48,7 +48,7 @@ impl Board {
             print!("{} ", 8 - i); // Row label
             for cell in row {
                 let piece_symbol = match cell {
-                    Cell::Empty => "·", // Use a dot or space for empty cells
+                    Cell::Empty => "·", // empty cells
                     Cell::Occupied(piece) => &piece_to_ascii(piece),
                 };
                 print!("{} ", piece_symbol); // Print piece with space
@@ -72,7 +72,7 @@ impl Board {
             (Color::Black, PieceType::Bishop) => "♝",
             (Color::Black, PieceType::Knight) => "♞",
             (Color::Black, PieceType::Pawn) => "♟︎",
-            _ => " ", // Default case, should not occur
+            _ => " ", // Default case
         } 
     }  } 
 
@@ -87,7 +87,7 @@ impl Board {
         }
     }
     pub fn set_piece_at(&mut self, position: (usize, usize), piece: Piece) {
-        // Set the piece at the given 'position'
+        // Set the piece at the given position
         self.grid[position.0][position.1] = Cell::Occupied(piece);
     }
     // Get the cell at the given position
@@ -95,7 +95,7 @@ impl Board {
         &self.grid[position.0 as usize][position.1 as usize]
     }
 
-    // Get the next square in the given direction from the given position
+    // used to check if king will be in check and for castling
     pub fn next_square_in_direction(&self, position: (isize, isize), direction: (isize, isize)) -> Option<(isize, isize)> {
         let new_position = (position.0 + direction.0, position.1 + direction.1);
         if self.is_within_bounds(new_position) {
@@ -105,7 +105,6 @@ impl Board {
         }
     }
     pub fn make_move(&mut self, from: (usize, usize), to: (usize, usize)) {
-        // Assuming 'from' and 'to' are valid positions and the move is legal
         // Move the piece from 'from' to 'to'
         let piece = self.grid[from.0][from.1];
         self.grid[from.0][from.1] = Cell::Empty;
@@ -126,8 +125,9 @@ impl Board {
             moved_piece.has_moved = true;
         }
 
-    // Add other methods related to the board here.
+   
     }
+    //after a piece has been taken/ captured it will be removed here
      pub fn remove_piece_at(&mut self, position: (usize, usize)) {
         self.grid[position.0][position.1] = Cell::Empty;
     }

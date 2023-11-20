@@ -17,24 +17,27 @@ pub struct Game {
     pub board: Board,
     pub current_player: Color,
     pub state: GameState,
-    // You can add more fields like move history, captured pieces, etc.
+    
 }
 
 impl Game {
     pub fn new() -> Self {
+        // initialize new game
         Self {
             board: Board::new(),
             current_player: Color::Black, 
             state: GameState::Ongoing,
         }
     }
+    //swap player after each turn
     pub fn switch_player(&mut self) {
         self.current_player = match self.current_player {
             Color::White => Color::Black,
             Color::Black => Color::White,
         };
     }
-    
+    //Links to valid_moves in Piece to determine individual piece moves are correct
+    //Handles bounds checking external to the piece.rs rules
     pub fn is_valid_move(&self, from: (usize, usize), to: (usize, usize)) -> bool {
         if !self.is_within_bounds(from) || !self.is_within_bounds(to) {
             return false;
@@ -53,6 +56,7 @@ impl Game {
     
         false
     }
+    //prevents pieces from moving off the board
     fn is_within_bounds(&self, position: (usize, usize)) -> bool {
         position.0 < BOARD_SIZE && position.1 < BOARD_SIZE
     }
@@ -80,7 +84,7 @@ impl Game {
 
         false
     }
-    // Helper function to find the king's position
+    // Helper function to find the king's position for check and checkmate
     fn find_king(&self, color: Color) -> Option<(usize, usize)> {
         for i in 0..BOARD_SIZE {
             for j in 0..BOARD_SIZE {
@@ -105,6 +109,7 @@ impl Game {
                     if piece.color == self.current_player {
                         let valid_moves = piece.valid_moves((i, j), &self.board);
                         for &move_pos in &valid_moves {
+                            //initialize a temp board with all the pieces in the same place to see if there are moves to save the king
                             // Make the move and check if the king is still in check
                             let mut temp_board = self.board.clone();
                             temp_board.make_move((i, j), move_pos);
@@ -120,6 +125,7 @@ impl Game {
 
         true
     }
+    //pawn promotion and castling were the only special moves implemented but these moves can be made the same way as regular moves
     pub fn handle_special_moves(&mut self, from: (usize, usize), to: (usize, usize)) {
         if let Some(piece) = self.board.get_piece_at(from) {
             match piece.piece_type {
@@ -157,8 +163,9 @@ impl Game {
             self.board.remove_piece_at(rook_from);
         }
 
-        // Update game state, e.g., mark king/rook as moved
+    
     }
+    //helper function for handle_castling 
     fn can_castle(&self, from: (usize, usize), to: (usize, usize)) -> bool {
         // Check if the piece at 'from' is a king and it hasn't moved
         if let Some(piece) = self.board.get_piece_at(from) {
@@ -230,9 +237,9 @@ impl Game {
     }
     fn handle_pawn_promotion(&mut self, to: (usize, usize)) {
         if self.is_pawn_promotion(to) {
-            // Promote the pawn. This could be to a queen or another piece, depending on the game rules or player choice.
+            // Promote the pawn to Queen.
             let promoted_piece = Piece {
-                piece_type: PieceType::Queen, // Simplified to always promote to Queen
+                piece_type: PieceType::Queen, 
                 color: self.current_player,
                 has_moved: true
             };
@@ -255,5 +262,5 @@ impl Game {
             false
         }
     }
-    // Add other methods related to the game state here.
+  
 }

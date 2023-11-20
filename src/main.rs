@@ -19,10 +19,11 @@ fn main() {
             println!("Game Over!");
             break;
         }
+        //check if players king is in check
         if game.is_in_check() {
             println!("{} is in check!", if game.current_player == piece::Color::White { "Black" } else { "White" });
         }
-
+        //check if checkmate and end game
         if game.is_in_checkmate() {
             println!("Checkmate! {} wins!", if game.current_player == piece::Color::White { "Black" } else { "White" });
             break;  // Exit the loop if the game is over
@@ -43,6 +44,7 @@ fn main() {
     }
 }
 
+//function to handle user input
 fn ask_for_move_input(prompt: &str) -> (usize, usize) {
     loop {
         println!("{}", prompt);
@@ -56,14 +58,14 @@ fn ask_for_move_input(prompt: &str) -> (usize, usize) {
         }
     }
 }
-
+// function to translate input such as e2 to e4 and convert it to translate to the grid set up
 fn parse_chess_notation(notation: &str) -> Option<(usize, usize)> {
     if notation.len() == 2 {
         let col = notation.chars().next().unwrap().to_ascii_lowercase() as usize - 'a' as usize;
         let row = notation.chars().nth(1).unwrap().to_digit(10).unwrap() as usize - 1;
 
         if col < 8 && row < 8 {
-            return Some((7 - row, col)); // Convert to 0-indexed and flip row for typical chessboard layout
+            return Some((7 - row, col)); 
         }
     }
     None

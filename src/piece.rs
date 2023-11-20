@@ -37,10 +37,12 @@ impl Piece {
             PieceType::King => self.king_moves(position, board),
         }
     }
+    //rules for moving pawns, does not handle pawn promotion
     fn pawn_moves(&self, position:(usize, usize), board: &Board) -> Vec<(usize, usize)> {
         let mut moves = Vec::new();
         let (x, y) = position;
         match self.color {
+            //White moves "up" on the board so all logic is addition/forward based
             Color::White => {
                 if x < BOARD_SIZE - 1 && board.grid[x + 1][y] == Cell::Empty {
                     moves.push((x + 1, y));
@@ -63,6 +65,7 @@ impl Piece {
                     }
                 }
             },
+            //Black moves "down" on the board so all logic is subtraction based
             Color::Black => {
                 if x > 0 && board.grid[x - 1][y] == Cell::Empty {
                     moves.push((x - 1, y));
@@ -88,6 +91,7 @@ impl Piece {
         }
         moves    
     }
+    //rook moves checks to see if the path for the rook is clear and does not allow for jumping opponents like knight
     fn rook_moves(&self, position: (usize, usize), board: &Board) -> Vec<(usize, usize)> {
         let mut moves = Vec::new();
         let (x, y) = position;
@@ -119,6 +123,7 @@ impl Piece {
         }
         moves
     }
+    //knight moves checks to make sure the piece will not go off the board but does not need to check for pieces in the way 
     fn knight_moves(&self, position: (usize, usize), board: &Board) -> Vec<(usize, usize)> {
         let mut moves = Vec::new();
         let (x, y) = position;
@@ -155,7 +160,7 @@ impl Piece {
         let directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)];
 
         for &(dx, dy) in &directions {
-            let mut current_x = x as i32;
+            let mut current_x = x as i32; //maintains bishop on his color
             let mut current_y = y as i32;
 
             loop {
@@ -213,6 +218,8 @@ impl Piece {
         }
         moves
     }
+    //king moves only handles moving the king and lets check and checkmate functions determine 
+    //if the king moves places the player in check or checkmate
     fn king_moves(&self, position: (usize, usize), board: &Board) -> Vec<(usize, usize)> {
         let mut moves = Vec::new();
         let (x, y) = position;
