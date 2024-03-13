@@ -1,4 +1,5 @@
 Chess Game in Rust
+
 This project is a simple implementation of a chess game written in Rust. It features a command-line interface (CLI) for player input, allowing two players to play a game of chess on the same machine. The game supports all basic chess rules, including pawn promotion, castling, and en passant captures.
 
 Features
